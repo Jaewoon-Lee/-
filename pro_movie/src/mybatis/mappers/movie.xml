@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.movie">
+	<resultMap id="movieResult" type="movieVO">
+		<result property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="actor" column="actor" />
+		<result property="year" column="year" />
+	</resultMap>
+
+	<select id="selectAllMovies" resultMap="movieResult">
+	<![CDATA[
+		SELECT * FROM t_movie ORDER BY id DESC	 	
+	]]>
+	</select>
+
+	<select id="selectMovieById"
+		parameterType="movieVO" resultType="movieVO">
+	<![CDATA[
+		SELECT * FROM t_movie
+		WHERE id=#{id}	 	
+	]]>
+	</select>
+
+	<insert id="insertMovie" parameterType="movieVO">
+	<![CDATA[
+		INSERT INTO t_movie
+		(id, title, actor, year)
+		VALUES (
+		    ( SELECT COALESCE(MAX(ID)+1, 1) FROM t_movie ),
+		    #{title},
+		    #{actor},
+		    #{year} )
+	]]>
+	</insert>
+
+	<update id="updateMovie" parameterType="movieVO">
+	<![CDATA[
+		UPDATE t_movie
+		SET title=#{title}, actor=#{actor}, year=#{year}
+		WHERE
+		id=#{id}
+	]]>
+	</update>
+
+	<delete id="deleteMovie" parameterType="movieVO">
+	<![CDATA[
+		DELETE FROM t_movie
+		WHERE
+		id=#{id}
+	]]>
+	</delete>
+
+</mapper>
